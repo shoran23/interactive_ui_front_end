@@ -1,11 +1,12 @@
 import React from 'react'
-import DashboardHeader from './ClientDashboardHeader.js'
-import DashboardProjectList from './ClientDashboardProjectList'
-import DashboardProjectDetails from './ClientDashboardProjectDetails'
-import DashboardFooter from './ClientDashboardFooter'
-import './client-dashboard.css'
+import DashboardHeader from './DashboardHeader.js'
+import DashboardProjectList from './DashboardProjectList'
+import DashboardProjectDetails from './DashboardProjectDetails'
+import DashboardFooter from './DashboardFooter'
+import CreateProject from '../create-project/CreateProject'
+import './dashboard.css'
 
-class ClientDashboard extends React.Component {
+class Dashboard extends React.Component {
     state = {
         user: 'User',
         projects: [
@@ -18,24 +19,34 @@ class ClientDashboard extends React.Component {
             {name: 'Project 5', status: 'project complete', customer: 'customer 1', order: '555555', designer: 'S.Horan', submittal: '2/21/21', pm: 'Gabe Wolloff', panels: [3]},
         ],
         selectedProject: 0,
+        createProject: true,
     }
     render() {
         return (
             <div className='dashboard'>
-                <DashboardHeader/>
-                <DashboardProjectList
-                    // states
-                    projects={this.state.projects}
-                />
-                {this.state.selectedProject !== null ?
-                    <DashboardProjectDetails
-                        // states 
-                        project={this.state.projects[this.state.selectedProject]}
+                {this.state.createProject ?
+                    <CreateProject
+                        // functions
+                        setTitle={this.props.setTitle}
                     />
                 :
-                    <div></div>
+                    <React.Fragment>
+                        <DashboardHeader/>
+                        <DashboardProjectList
+                            // states
+                            projects={this.state.projects}
+                        />
+                        {this.state.selectedProject !== null ?
+                            <DashboardProjectDetails
+                                // states 
+                                project={this.state.projects[this.state.selectedProject]}
+                            />
+                        :
+                            <div></div>
+                        }
+                        <DashboardFooter/>
+                    </React.Fragment>
                 }
-                <DashboardFooter/>
             </div>
         )
     }
@@ -43,4 +54,4 @@ class ClientDashboard extends React.Component {
         this.props.setTitle(`${this.state.user} Available Projects`)
     }
 }
-export default ClientDashboard
+export default Dashboard

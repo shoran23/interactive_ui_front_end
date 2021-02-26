@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css'
 import Welcome from './components/welcome/Welcome.js'
-import ClientDashboard from './components/client-dashboard/ClientDashboard.js'
+import Dashboard from './components/dashboard/Dashboard.js'
 
 // consider using react router to handle some of the routing, including welcome, dashbord and signup
 
@@ -23,7 +23,7 @@ class App extends React.Component {
                     />
                 :
                     <React.Fragment>
-                        <ClientDashboard
+                        <Dashboard
                             // functions
                             setTitle={this.setTitle}
                         />
