@@ -1,15 +1,15 @@
 import React from 'react'
-import DashboardHeader from './DashboardHeader.js'
-import DashboardProjectList from './DashboardProjectList'
-import DashboardProjectDetails from './DashboardProjectDetails'
-import DashboardFooter from './DashboardFooter'
-import './dashboard.css'
+import DashboardHeader from './ClientDashboardHeader.js'
+import DashboardProjectList from './ClientDashboardProjectList'
+import DashboardProjectDetails from './ClientDashboardProjectDetails'
+import DashboardFooter from './ClientDashboardFooter'
+import './client-dashboard.css'
 
-class Dashboard extends React.Component {
+class ClientDashboard extends React.Component {
     state = {
         user: 'User',
         projects: [
-            {name: 'Project 1', status: 'update pending', customer: 'customer 1', order: '111111', designer: 'S.Horan', submittal: '2/17/21', pm: 'Gabe Wolloff', 
+            {name: 'Project 1', status: 'Update Pending', type: 'Slide Show', customer: 'customer 1', order: '111111', designer: 'S.Horan', submittal: '2/17/21', pm: 'Gabe Wolloff', 
                 panels: [{make: 'Crestron', model: "TSW-1060", resolution: '1280x800px', image: 'crestron-tsw1060.png'}
             ]},
             {name: 'Project 2', status: 'ready for review', customer: 'customer 1', order: '222222', designer: 'S.Horan', submittal: '2/18/21', pm: 'Gabe Wolloff', panels: [1]},
@@ -43,4 +43,4 @@ class Dashboard extends React.Component {
         this.props.setTitle(`${this.state.user} Available Projects`)
     }
 }
-export default Dashboard
+export default ClientDashboard

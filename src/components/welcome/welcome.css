@@ -16,7 +16,7 @@
     justify-content: center;
     align-items: center;
 }
-.welcome-login-form {
+.welcome-login-form, .welcome-register-form {
     height: 50%;
     width: 100%;
     background-color: white;
@@ -28,9 +28,20 @@
     justify-content: center;
     align-items: center;
 }
+.welcome-register-form {
+    height: auto;
+    padding-top: 10%;
+    padding-bottom: 5%;
+}
 .welcome-login {
     width: 65%;
     margin-bottom: 1%;
+}
+.welcome-register {
+    width: 80%;
+}
+.welcome-register-popup {
+    margin-top: 5%;
 }
 #welcome-header {
     grid-area: header;
@@ -40,7 +51,7 @@
     grid-area: message;
     align-items: flex-start;
 }
-#welcome-login {
+#welcome-session {
     grid-area: login;
 }
 #welcome-footer {

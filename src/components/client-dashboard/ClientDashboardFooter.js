@@ -4,7 +4,6 @@ class DashboardFooter extends React.Component {
     render() {
         return (
             <div id='dashboard-footer'>
-                Projector Footer
             </div>
         )
     }

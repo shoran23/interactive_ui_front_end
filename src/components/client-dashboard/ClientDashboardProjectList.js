@@ -1,19 +1,20 @@
 import React from 'react'
 import Button from 'react-bootstrap/Button'
+import Row from 'react-bootstrap/Row'
 
 class DashboardProjectListItem extends React.Component {
     render() {
         return (
-            <div className='dashboard-project-list-item'>
+            <Row className='dashboard-project-list-item'>
                 <h5>{this.props.project.name}</h5>
                 <p>Status: {this.props.project.status}</p>
+                <p>Type: {this.props.project.type}</p>
                 <Button variant='link'>Info</Button>
                 <Button variant='link'>Review</Button>
-            </div>
+            </Row>
         )
     }
 }
-
 class DashboardProjectList extends React.Component {
     render() {
         return (
