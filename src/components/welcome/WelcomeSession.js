@@ -19,13 +19,21 @@ class WelcomeSignIn extends React.Component {
                 />
                 <Form.Control
                     className='welcome-login'
+                    type='test'
+                    placeholder='Username'
+                    id='username'
+                    value={this.props.username}
+                    onChange={this.props.handleChange}
+                />
+                <Form.Control
+                    className='welcome-login'
                     type='password'
                     placeholder='Password'
                     id='password'
                     value={this.props.password}
                     onChange={this.props.handleChange}
                 />
-                <Button variant='primary' className='welcome-login'>Log In</Button>
+                <Button variant='primary' className='welcome-login' onClick={this.props.handleSignin}>Log In</Button>
                 <Button variant='link'>Forgot Password?</Button>
                 <Button variant='success' className='welcome-login' onClick={()=> this.props.handleDirect('session','register')}>Register</Button>
             </Form>
@@ -53,6 +61,13 @@ class WelcomeRegister extends React.Component {
                     />
                 </Form.Group>
                 <Form.Group className='welcome-register'>
+                    <Form.Control
+                        type='text'
+                        placeholder='Username'
+                        id='username'
+                        value={this.props.username}
+                        onChange={this.props.handleChange}
+                    />
                     <Form.Control
                         type='email'
                         placeholder='Email'
@@ -117,7 +132,7 @@ class WelcomeRegister extends React.Component {
                         <div></div>
                     }
                 </Form.Group>
-                <Button variant='success' className='welcome-register'>Submit</Button>
+                <Button variant='success' className='welcome-register' onClick={this.props.handleRegister}>Submit</Button>
                 <Button variant='link' className='welcome-register' onClick={()=> this.props.handleDirect('session','signin')}>Cancel</Button>
             </Form>
         )
@@ -131,18 +146,21 @@ class WelcomeSession extends React.Component {
                     <WelcomeSignIn
                         // states
                         email={this.props.email}
+                        username={this.props.username}
                         password={this.props.password}
                         passwordConfirm={this.props.passwordConfirm}
                         role={this.props.role}
                         // functions
                         handleChange={this.props.handleChange}
                         handleDirect={this.props.handleDirect}
+                        handleSignin={this.props.handleSignin}
                     />
                 :
                     <WelcomeRegister
                         // state
                         firstName={this.props.firstName}
                         lastName={this.props.lastName}
+                        username={this.props.username}
                         email={this.props.email}
                         password={this.props.password}
                         passwordConfirm={this.props.passwordConfirm}
@@ -152,6 +170,7 @@ class WelcomeSession extends React.Component {
                         // functions
                         handleChange={this.props.handleChange}
                         handleDirect={this.props.handleDirect}
+                        handleRegister={this.props.handleRegister}
                     />
                 }
             </div>

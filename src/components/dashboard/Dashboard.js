@@ -19,7 +19,7 @@ class Dashboard extends React.Component {
             {name: 'Project 5', status: 'project complete', customer: 'customer 1', order: '555555', designer: 'S.Horan', submittal: '2/21/21', pm: 'Gabe Wolloff', panels: [3]},
         ],
         selectedProject: 0,
-        createProject: true,
+        createProject: false,
     }
     render() {
         return (

@@ -9,6 +9,7 @@ class Welcome extends React.Component {
     state = {
         firstName: '',
         lastName: '',
+        username: '',
         email: '',
         password: '',
         passwordConfirm: '',
@@ -29,6 +30,43 @@ class Welcome extends React.Component {
     handleDirect = (key,value) => {
         this.setState({[key]: value})
     }
+    handleRegister = () => {
+        fetch('http://localhost:8000/api/v1/dj-rest-auth/registration/', {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            method: 'POST',
+            body: JSON.stringify ({
+                username: this.state.username,
+                email: this.state.email,
+                password1: this.state.password,
+                password2: this.state.passwordConfirm
+            }) 
+        })
+        .then(res => res.json())
+        .then(resJson => {
+            console.log(resJson)
+        })
+    }
+    handleSignin = () => {
+        fetch('http://localhost:8000/api/v1/dj-rest-auth/login/', {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            method: 'POST',
+            body: JSON.stringify ({
+                username: this.state.username,
+                email: this.state.email,
+                password: this.state.password
+            })
+        })
+        .then(res => res.json())
+        .then(resJson => {
+            console.log(resJson)
+        })
+    }
     render() {
         console.log(this.state)
         return (
@@ -39,6 +77,7 @@ class Welcome extends React.Component {
                     // states
                     firstName={this.state.firstName}
                     lastName={this.state.lastName}
+                    username={this.state.username}
                     email={this.state.email}
                     passworld={this.state.password}
                     passwordConfirm={this.state.passwordConfirm}
@@ -49,6 +88,8 @@ class Welcome extends React.Component {
                     // functions
                     handleChange={this.handleChange}
                     handleDirect={this.handleDirect}
+                    handleRegister={this.handleRegister}
+                    handleSignin={this.handleSignin}
                 />
                 <WelcomeFooter/>
             </div>
