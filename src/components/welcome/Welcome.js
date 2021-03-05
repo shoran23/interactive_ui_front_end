@@ -15,6 +15,7 @@ class Welcome extends React.Component {
         passwordConfirm: '',
         session: 'signin',
         role: '',
+        error: 'testing error',
         clients: [
             {name: 'MIT Sloan'},
             {name: 'Full Stack Academey'},
@@ -29,6 +30,17 @@ class Welcome extends React.Component {
     }
     handleDirect = (key,value) => {
         this.setState({[key]: value})
+    }
+    handleError = err => {
+        let errObj = JSON.parse(err)
+        let keys = Object.keys(errObj)
+        let values = []
+
+        for(let key of keys) {
+            values.push(errObj[key][0])
+        }
+        console.log(keys)
+        console.log(values)
     }
     handleRegister = () => {
         fetch('http://localhost:8000/api/v1/dj-rest-auth/registration/', {
@@ -62,13 +74,37 @@ class Welcome extends React.Component {
                 password: this.state.password
             })
         })
+        .then(res => {
+            if(!res.ok) {
+                throw res
+            } else {
+                return res.json()
+            }
+        })
+        .then(resJson => {
+            console.log(resJson)
+        })
+        .catch(err => {
+            err.text()
+            .then(errText => {
+                this.handleError(errText)
+            })
+        })
+    }
+    handleSignout = () => {
+        fetch('http://localhost:8000/api/v1/dj-rest-auth/logout/', {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: 'POST'
+        })
         .then(res => res.json())
         .then(resJson => {
             console.log(resJson)
         })
     }
     render() {
-        console.log(this.state)
         return (
             <div className='welcome'>
                 <WelcomeHeader/>
@@ -85,11 +121,13 @@ class Welcome extends React.Component {
                     role={this.state.role}
                     clients={this.state.clients}
                     clientIndex={this.state.clientIndex}
+                    error={this.state.error}
                     // functions
                     handleChange={this.handleChange}
                     handleDirect={this.handleDirect}
                     handleRegister={this.handleRegister}
                     handleSignin={this.handleSignin}
+                    handleSignout={this.handleSignout}
                 />
                 <WelcomeFooter/>
             </div>

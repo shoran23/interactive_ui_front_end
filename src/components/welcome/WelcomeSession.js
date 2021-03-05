@@ -9,6 +9,11 @@ class WelcomeSignIn extends React.Component {
     render() {
         return (
             <Form className='welcome-login-form'>
+                {this.props.error != '' ?
+                    <p>{this.props.error}</p>
+                :
+                    <React.Component></React.Component>
+                }
                 <Form.Control
                     className='welcome-login'
                     type='email'
@@ -44,6 +49,11 @@ class WelcomeRegister extends React.Component {
     render() {
         return (
             <Form className='welcome-register-form'>
+                {this.props.error != '' ?
+                    <p>{this.props.error}</p>
+                :
+                    <React.Fragment></React.Fragment>
+                }
                 <Form.Group className='welcome-register'>
                     <Form.Control
                         type='text'
@@ -150,6 +160,7 @@ class WelcomeSession extends React.Component {
                         password={this.props.password}
                         passwordConfirm={this.props.passwordConfirm}
                         role={this.props.role}
+                        error={this.props.error}
                         // functions
                         handleChange={this.props.handleChange}
                         handleDirect={this.props.handleDirect}
@@ -165,6 +176,7 @@ class WelcomeSession extends React.Component {
                         password={this.props.password}
                         passwordConfirm={this.props.passwordConfirm}
                         role={this.props.role}
+                        error={this.props.error}
                         clients={this.props.clients}
                         clientIndex={this.props.clientIndex}
                         // functions
