@@ -15,7 +15,7 @@ class Welcome extends React.Component {
         passwordConfirm: '',
         session: 'signin',
         role: '',
-        error: 'testing error',
+        errors: [],
         clients: [
             {name: 'MIT Sloan'},
             {name: 'Full Stack Academey'},
@@ -35,12 +35,61 @@ class Welcome extends React.Component {
         let errObj = JSON.parse(err)
         let keys = Object.keys(errObj)
         let values = []
-
         for(let key of keys) {
             values.push(errObj[key][0])
         }
-        console.log(keys)
-        console.log(values)
+        this.setState({errors: values})
+    }
+
+
+    handleCreateUserRole = key => {
+        // get users
+        fetch('http://localhost:8000/api/v1/users', {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Token ' + key
+            }
+        })
+        .then(res => res.json())
+        .then(resJson => {
+            let users = resJson
+            let id = null
+            for(let user of users) {
+                if(user.username === this.state.username) {
+                    id = user.id
+                    break;
+                }
+            }
+            console.log('id = ',id)
+            fetch(`http://localhost:8000/api/v1/${this.state.role}/`, {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Token ' + key
+                },
+                method: 'POST',
+                body: JSON.stringify ({
+                    user: id
+                })
+            }) 
+            .then(res => {
+                if(res.ok) {
+                    fetch(`http://localhost:8000/api/v1/users/${id}/`, {
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Token ' + key
+                        },
+                        method: 'PATCH',
+                        body: JSON.stringify ({
+                            first_name: this.state.firstName,
+                            last_name: this.state.lastName
+                        })
+                    })
+                }
+            })           
+        })
     }
     handleRegister = () => {
         fetch('http://localhost:8000/api/v1/dj-rest-auth/registration/', {
@@ -56,9 +105,23 @@ class Welcome extends React.Component {
                 password2: this.state.passwordConfirm
             }) 
         })
-        .then(res => res.json())
+        .then(res => {
+            if(!res.ok) {
+                throw res
+            } else {
+                return res.json()
+            }
+        })
         .then(resJson => {
+            this.setState({errors: []})
             console.log(resJson)
+            this.handleCreateUserRole(resJson.key)
+        })
+        .catch(err => {
+            err.text()
+            .then(errText => {
+                this.handleError(errText)
+            })
         })
     }
     handleSignin = () => {
@@ -82,7 +145,9 @@ class Welcome extends React.Component {
             }
         })
         .then(resJson => {
-            console.log(resJson)
+            this.setState({errors: []})
+            this.props.handleState('token',resJson)
+            this.props.handleState('login',true)
         })
         .catch(err => {
             err.text()
@@ -91,19 +156,7 @@ class Welcome extends React.Component {
             })
         })
     }
-    handleSignout = () => {
-        fetch('http://localhost:8000/api/v1/dj-rest-auth/logout/', {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            method: 'POST'
-        })
-        .then(res => res.json())
-        .then(resJson => {
-            console.log(resJson)
-        })
-    }
+
     render() {
         return (
             <div className='welcome'>
@@ -121,13 +174,14 @@ class Welcome extends React.Component {
                     role={this.state.role}
                     clients={this.state.clients}
                     clientIndex={this.state.clientIndex}
-                    error={this.state.error}
+                    errors={this.state.errors}
                     // functions
                     handleChange={this.handleChange}
                     handleDirect={this.handleDirect}
                     handleRegister={this.handleRegister}
                     handleSignin={this.handleSignin}
                     handleSignout={this.handleSignout}
+                    handleState={this.handleState}
                 />
                 <WelcomeFooter/>
             </div>

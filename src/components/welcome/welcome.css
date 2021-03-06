@@ -58,5 +58,12 @@
     grid-area: footer;
     background-color: #404041;
 }
+.welcome-error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: red;
+    font-weight: bold;
+}
 
 

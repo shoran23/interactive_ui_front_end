@@ -7,12 +7,17 @@ import "bootstrap/dist/css/bootstrap.min.css"
 
 class WelcomeSignIn extends React.Component {
     render() {
+        console.log(this.props.errors)
         return (
             <Form className='welcome-login-form'>
-                {this.props.error != '' ?
-                    <p>{this.props.error}</p>
+                {this.props.errors.length > 0 ?
+                    <React.Fragment>
+                        {this.props.errors.map(error => (
+                            <p className='welcome-error'>{error}</p>
+                        ))}
+                    </React.Fragment>
                 :
-                    <React.Component></React.Component>
+                    <div></div>
                 }
                 <Form.Control
                     className='welcome-login'
@@ -49,10 +54,14 @@ class WelcomeRegister extends React.Component {
     render() {
         return (
             <Form className='welcome-register-form'>
-                {this.props.error != '' ?
-                    <p>{this.props.error}</p>
+                {this.props.errors.length > 0 ?
+                    <React.Component>
+                        {this.props.errors.map(error => (
+                            <p>{error}</p>
+                        ))}
+                    </React.Component>
                 :
-                    <React.Fragment></React.Fragment>
+                    <div></div>
                 }
                 <Form.Group className='welcome-register'>
                     <Form.Control
@@ -108,9 +117,9 @@ class WelcomeRegister extends React.Component {
                         onChange={this.props.handleChange}
                     >
                         <option value=''>Select Role</option>
-                        <option value='client'>Client</option>
-                        <option value='manager'>Manager</option>
-                        <option value='programmer'>Programmer</option>
+                        <option value='clients'>Client</option>
+                        <option value='managers'>Manager</option>
+                        <option value='programmers'>Programmer</option>
                     </Form.Control>
                     {this.props.role !== ''?
                         <Col className='welcome-register-popup'>
@@ -160,11 +169,12 @@ class WelcomeSession extends React.Component {
                         password={this.props.password}
                         passwordConfirm={this.props.passwordConfirm}
                         role={this.props.role}
-                        error={this.props.error}
+                        errors={this.props.errors}
                         // functions
                         handleChange={this.props.handleChange}
                         handleDirect={this.props.handleDirect}
                         handleSignin={this.props.handleSignin}
+                        handleState={this.props.handleState}
                     />
                 :
                     <WelcomeRegister
@@ -176,13 +186,14 @@ class WelcomeSession extends React.Component {
                         password={this.props.password}
                         passwordConfirm={this.props.passwordConfirm}
                         role={this.props.role}
-                        error={this.props.error}
+                        errors={this.props.errors}
                         clients={this.props.clients}
                         clientIndex={this.props.clientIndex}
                         // functions
                         handleChange={this.props.handleChange}
                         handleDirect={this.props.handleDirect}
                         handleRegister={this.props.handleRegister}
+                        handleState={this.props.handleState}
                     />
                 }
             </div>

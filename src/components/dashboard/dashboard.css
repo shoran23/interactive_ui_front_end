@@ -2,9 +2,15 @@
     background-color: #404041;
     border: 1px solid black;
     grid-area: header;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    border: 1px solid black;
+    padding-left: 1%;
+    padding-right: 1%;
 }
 #dashboard-project-list {
-
     border: 1px solid black;
     grid-area: list;
 }
@@ -50,4 +56,10 @@
     flex-direction: row;
     justify-content: space-evenly;
     align-items: center;
+}
+.dashboard-header-button {
+    border: none;
+    color: whitesmoke;
+    font-weight: bold;
+    background: none;
 }

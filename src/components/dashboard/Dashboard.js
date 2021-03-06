@@ -31,7 +31,10 @@ class Dashboard extends React.Component {
                     />
                 :
                     <React.Fragment>
-                        <DashboardHeader/>
+                        <DashboardHeader
+                            // functions
+                            handleSignout={this.props.handleSignout}
+                        />
                         <DashboardProjectList
                             // states
                             projects={this.state.projects}
