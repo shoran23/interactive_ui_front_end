@@ -5,21 +5,74 @@ import DashboardProjectDetails from './DashboardProjectDetails'
 import DashboardFooter from './DashboardFooter'
 import CreateProject from '../create-project/CreateProject'
 import './dashboard.css'
+import Cookies from 'universal-cookie'
 
 class Dashboard extends React.Component {
     state = {
-        user: 'User',
-        projects: [
-            {name: 'Project 1', status: 'Update Pending', type: 'Slide Show', customer: 'customer 1', order: '111111', designer: 'S.Horan', submittal: '2/17/21', pm: 'Gabe Wolloff', 
-                panels: [{make: 'Crestron', model: "TSW-1060", resolution: '1280x800px', image: 'crestron-tsw1060.png'}
-            ]},
-            {name: 'Project 2', status: 'ready for review', customer: 'customer 1', order: '222222', designer: 'S.Horan', submittal: '2/18/21', pm: 'Gabe Wolloff', panels: [1]},
-            {name: 'Project 3', status: 'ready for review', customer: 'customer 1', order: '333333', designer: 'S.Horan', submittal: '2/19/21', pm: 'Gabe Wolloff', panels: [2,2]},
-            {name: 'Project 4', status: 'approved', customer: 'customer 1', order: '444444', designer: 'S.Horan', submittal: '2/20/21', pm: 'Gabe Wolloff', panels: [1,1,1]},
-            {name: 'Project 5', status: 'project complete', customer: 'customer 1', order: '555555', designer: 'S.Horan', submittal: '2/21/21', pm: 'Gabe Wolloff', panels: [3]},
-        ],
-        selectedProject: 0,
+        projects: [],
+        projectIndex: null,
         createProject: false,
+    }
+    handleState = (key,value) => {
+        this.setState({[key]: value})
+    }
+    getProgrammers = () => {
+        const cookies = new Cookies 
+        const key = cookies.get('key')
+        fetch('http://localhost:8000/api/v1/programmers/', {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Token ' + key
+            }
+        })
+        .then(res => {
+            if(!res.ok) {
+                throw res
+            } else {
+                return res.json()
+            }
+        })
+        .then(resJson => {
+            this.setState({})
+        })
+    }
+    getUserProjects = () => {
+        const cookies = new Cookies
+        const key = cookies.get('key')
+        let projects = []
+        fetch('http://localhost:8000/api/v1/projects/', {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Token ' + key
+            }
+        })
+        .then(res => {
+            if(!res.ok) {
+                throw res
+            } else {
+                return res.json()
+            }
+        })
+        .then(resJson => {
+            let projects = resJson
+            let userProjects = []
+            let userList = []
+            for(let projectIndex=0;projectIndex<projects.length;projectIndex++) {
+                switch(this.props.userProfile.role) {
+                    case 'Programmer': {userList = projects[projectIndex].programmers; break;}
+                    case 'Manager': {userList = projects[projectIndex].managers; break;}
+                    case 'Client': {userList = projects[projectIndex].clients; break;}
+                }
+                for(let user of userList) {
+                    if(user === this.props.user.id) {
+                        userProjects.push(projects[projectIndex])
+                    }
+                }
+            }   
+            this.setState({projects: userProjects})
+        })
     }
     render() {
         return (
@@ -38,11 +91,17 @@ class Dashboard extends React.Component {
                         <DashboardProjectList
                             // states
                             projects={this.state.projects}
+                            user={this.props.user}
+                            // functions
+                            getUserProjects={this.getUserProjects}
+                            getProgrammers={this.getProgrammers}
+                            handleState={this.handleState}
                         />
                         {this.state.selectedProject !== null ?
                             <DashboardProjectDetails
                                 // states 
-                                project={this.state.projects[this.state.selectedProject]}
+                                project={this.state.projects[this.state.projectIndex]}
+                                projectIndex={this.state.projectIndex}
                             />
                         :
                             <div></div>
@@ -54,7 +113,7 @@ class Dashboard extends React.Component {
         )
     }
     componentDidMount() {
-        this.props.setTitle(`${this.state.user} Available Projects`)
+        this.props.setTitle(`${this.props.user.first_name} ${this.props.user.last_name} Available Projects`)
     }
 }
 export default Dashboard

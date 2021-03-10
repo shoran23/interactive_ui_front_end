@@ -7,13 +7,12 @@ import "bootstrap/dist/css/bootstrap.min.css"
 
 class WelcomeSignIn extends React.Component {
     render() {
-        console.log(this.props.errors)
         return (
             <Form className='welcome-login-form'>
                 {this.props.errors.length > 0 ?
                     <React.Fragment>
-                        {this.props.errors.map(error => (
-                            <p className='welcome-error'>{error}</p>
+                        {this.props.errors.map((error,index) => (
+                            <p className='welcome-error' key={index}>{error}</p>
                         ))}
                     </React.Fragment>
                 :
@@ -49,17 +48,20 @@ class WelcomeSignIn extends React.Component {
             </Form>
         )
     }
+    componentDidMount() {
+        this.props.clearCredentials()
+    }
 }
 class WelcomeRegister extends React.Component {
     render() {
         return (
             <Form className='welcome-register-form'>
                 {this.props.errors.length > 0 ?
-                    <React.Component>
-                        {this.props.errors.map(error => (
-                            <p>{error}</p>
+                    <React.Fragment>
+                        {this.props.errors.map((error,index) => (
+                            <p className='welcome-error' key={index}>{error}</p>
                         ))}
-                    </React.Component>
+                    </React.Fragment>
                 :
                     <div></div>
                 }
@@ -156,6 +158,9 @@ class WelcomeRegister extends React.Component {
             </Form>
         )
     }
+    componentDidMount() {
+        this.props.clearCredentials()
+    }
 }
 class WelcomeSession extends React.Component {
     render() {
@@ -175,6 +180,7 @@ class WelcomeSession extends React.Component {
                         handleDirect={this.props.handleDirect}
                         handleSignin={this.props.handleSignin}
                         handleState={this.props.handleState}
+                        clearCredentials={this.props.clearCredentials}
                     />
                 :
                     <WelcomeRegister
@@ -194,6 +200,7 @@ class WelcomeSession extends React.Component {
                         handleDirect={this.props.handleDirect}
                         handleRegister={this.props.handleRegister}
                         handleState={this.props.handleState}
+                        clearCredentials={this.props.clearCredentials}
                     />
                 }
             </div>

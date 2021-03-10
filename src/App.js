@@ -8,7 +8,8 @@ import Dashboard from './components/dashboard/Dashboard.js'
 class App extends React.Component {
     state = {
         login: false,
-        userRole: 'client',
+        userProfile: {},
+        user: {},
         token: '',
     }
     setTitle = newTitle => {
@@ -32,13 +33,13 @@ class App extends React.Component {
         })
     }  
     render() {
-        console.log(this.state.token)
         return (
             <div className="App">
                 {!this.state.login ?
                     <Welcome
                         // states
                         token={this.state.token}
+                        user={this.state.user}
                         // functions
                         setTitle={this.setTitle}
                         handleState={this.handleState}
@@ -46,9 +47,13 @@ class App extends React.Component {
                 :
                     <React.Fragment>
                         <Dashboard
+                            // states
+                            user={this.state.user}
+                            userProfile={this.state.userProfile}
                             // functions
                             setTitle={this.setTitle}
                             handleSignout={this.handleSignout}
+                            handleState={this.handleState}
                         />
                     </React.Fragment>
                 }

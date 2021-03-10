@@ -4,6 +4,9 @@ import WelcomeMessage from './WelcomeMessage'
 import WelcomeSession from './WelcomeSession'
 import WelcomeFooter from './WelcomeFooter'
 import './welcome.css'
+import Cookies from 'universal-cookie';
+ 
+
 
 class Welcome extends React.Component {
     state = {
@@ -16,14 +19,10 @@ class Welcome extends React.Component {
         session: 'signin',
         role: '',
         errors: [],
-        clients: [
-            {name: 'MIT Sloan'},
-            {name: 'Full Stack Academey'},
-            {name: 'ADP'},
-            {name: 'ESPN'},
-            {name: 'TJX'}
-        ],
+        companies: [],
         clientIndex: null,
+        user: {},
+        userRole: '',
     }
     handleChange = e => {
         this.setState({[e.target.id]: e.target.value})
@@ -40,11 +39,70 @@ class Welcome extends React.Component {
         }
         this.setState({errors: values})
     }
-
-
-    handleCreateUserRole = key => {
-        // get users
+    clearCredentials = () => {
+        const states = ['firstName','lastName','username','email','password','passwordConfirm']
+        states.map(state => {
+            this.setState({[state]: ''})
+        })
+    }
+    /* HANDLE REQUESTS ***********************************************************************************/
+    continueLogin = () => {
+        // get the key from cookies
+        const cookies = new Cookies();
+        const key = cookies.get('key')
+        let thisUser = {}
+        // fetch all users
         fetch('http://localhost:8000/api/v1/users', {
+            headers: {
+                "Accept": 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Token ' + key
+            }
+        })
+        .then(res => {
+            if(!res.ok) {
+                throw res
+            } else {
+                return res.json()
+            }
+        })
+        .then(resJson => {
+            // find user object that matches the provided credentials
+            let users = resJson
+            for(let user of users) {
+                if(user.username === this.state.username) {
+                    thisUser = user
+                }
+            }
+            // get user profile
+            fetch('http://localhost:8000/api/v1/user_profiles', {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Token ' + key 
+                }
+            })
+            .then(resProfile => {
+                if(!resProfile.ok) {
+                    throw resProfile
+                } else {
+                    return resProfile.json()
+                }
+            })
+            .then(profiles => {
+                for(let profile of profiles) {
+                    if(thisUser.id === profile.user) {
+                        this.props.handleState('userProfile',profile)
+                        this.props.handleState('user',thisUser)
+                        this.props.handleState('login',true)
+                    }
+                }
+            })
+        })
+
+    }
+    handleCreateUserRole = key => {
+        fetch('http://localhost:8000/api/v1/users/', {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -57,11 +115,11 @@ class Welcome extends React.Component {
             let id = null
             for(let user of users) {
                 if(user.username === this.state.username) {
+                    this.props.handleState('user',user)
                     id = user.id
                     break;
                 }
             }
-            console.log('id = ',id)
             fetch(`http://localhost:8000/api/v1/${this.state.role}/`, {
                 headers: {
                     'Accept': 'application/json',
@@ -86,6 +144,11 @@ class Welcome extends React.Component {
                             first_name: this.state.firstName,
                             last_name: this.state.lastName
                         })
+                    })
+                    .then(res => {
+                        if(res.ok) {
+                            this.props.handleState('login',true)
+                        }
                     })
                 }
             })           
@@ -114,8 +177,10 @@ class Welcome extends React.Component {
         })
         .then(resJson => {
             this.setState({errors: []})
-            console.log(resJson)
+            const cookies = new Cookies();
+            cookies.set('key', resJson.key, { path: '/' });
             this.handleCreateUserRole(resJson.key)
+            this.props.handleState('login',true)
         })
         .catch(err => {
             err.text()
@@ -146,8 +211,9 @@ class Welcome extends React.Component {
         })
         .then(resJson => {
             this.setState({errors: []})
-            this.props.handleState('token',resJson)
-            this.props.handleState('login',true)
+            const cookies = new Cookies()
+            cookies.set('key', resJson.key, { path: '/' });
+            this.continueLogin()
         })
         .catch(err => {
             err.text()
@@ -156,7 +222,16 @@ class Welcome extends React.Component {
             })
         })
     }
-
+    getCompanies = () => {
+        fetch('http://localhost:8000/api/v1/companies', {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                //'Authentication': 
+            },
+            method: 'GET',
+        })
+    }
     render() {
         return (
             <div className='welcome'>
@@ -175,6 +250,7 @@ class Welcome extends React.Component {
                     clients={this.state.clients}
                     clientIndex={this.state.clientIndex}
                     errors={this.state.errors}
+                    user={this.props.user}
                     // functions
                     handleChange={this.handleChange}
                     handleDirect={this.handleDirect}
@@ -182,6 +258,7 @@ class Welcome extends React.Component {
                     handleSignin={this.handleSignin}
                     handleSignout={this.handleSignout}
                     handleState={this.handleState}
+                    clearCredentials={this.clearCredentials}
                 />
                 <WelcomeFooter/>
             </div>
