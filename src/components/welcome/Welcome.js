@@ -4,9 +4,7 @@ import WelcomeMessage from './WelcomeMessage'
 import WelcomeSession from './WelcomeSession'
 import WelcomeFooter from './WelcomeFooter'
 import './welcome.css'
-import Cookies from 'universal-cookie';
- 
-
+import Cookies from 'universal-cookie'; 
 
 class Welcome extends React.Component {
     state = {
@@ -69,6 +67,7 @@ class Welcome extends React.Component {
         .then(resJson => {
             // find user object that matches the provided credentials
             let users = resJson
+            this.props.handleState('users',users)
             for(let user of users) {
                 if(user.username === this.state.username) {
                     thisUser = user

@@ -50,6 +50,7 @@ class App extends React.Component {
                             // states
                             user={this.state.user}
                             userProfile={this.state.userProfile}
+                            users={this.state.users}
                             // functions
                             setTitle={this.setTitle}
                             handleSignout={this.handleSignout}

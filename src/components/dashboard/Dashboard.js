@@ -77,38 +77,42 @@ class Dashboard extends React.Component {
     render() {
         return (
             <div className='dashboard'>
-                {this.state.createProject ?
-                    <CreateProject
+                <React.Fragment>
+                    <DashboardHeader
                         // functions
-                        setTitle={this.props.setTitle}
+                        handleSignout={this.props.handleSignout}
                     />
-                :
-                    <React.Fragment>
-                        <DashboardHeader
+                    {this.state.createProject ?
+                        <CreateProject
                             // functions
-                            handleSignout={this.props.handleSignout}
-                        />
-                        <DashboardProjectList
-                            // states
-                            projects={this.state.projects}
-                            user={this.props.user}
-                            // functions
-                            getUserProjects={this.getUserProjects}
-                            getProgrammers={this.getProgrammers}
+                            setTitle={this.props.setTitle}
                             handleState={this.handleState}
                         />
-                        {this.state.selectedProject !== null ?
-                            <DashboardProjectDetails
-                                // states 
-                                project={this.state.projects[this.state.projectIndex]}
-                                projectIndex={this.state.projectIndex}
+                    :
+                        <React.Fragment>
+                            <DashboardProjectList
+                                // states
+                                projects={this.state.projects}
+                                user={this.props.user}
+                                // functions
+                                getUserProjects={this.getUserProjects}
+                                getProgrammers={this.getProgrammers}
+                                handleState={this.handleState}
                             />
-                        :
-                            <div></div>
-                        }
-                        <DashboardFooter/>
-                    </React.Fragment>
-                }
+                            {this.state.selectedProject !== null ?
+                                <DashboardProjectDetails
+                                    // states 
+                                    project={this.state.projects[this.state.projectIndex]}
+                                    projectIndex={this.state.projectIndex}
+                                    users={this.props.users}
+                                />
+                            :
+                                <div></div>
+                            }
+                        </React.Fragment>
+                    }
+                    <DashboardFooter/>
+                </React.Fragment>
             </div>
         )
     }
