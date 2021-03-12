@@ -7,6 +7,7 @@ import Col from 'react-bootstrap/Col'
 import CreateProjectSlideShow from './CreateProjectSlideShow'
 import CreateProjectDemo from './CreateProjectDemo'
 import './create-project.css'
+import Cookies from 'universal-cookie'
 
 class CreateProject extends React.Component {
     state = {
@@ -14,13 +15,21 @@ class CreateProject extends React.Component {
         orderNumber: null,
         projectNumber: null,
         name: '',
-        client: [0],
+        clients: [0],
         designers: [0],
         managers: [0],
         type: 'None',
+        availableDesigners: [],
+        availableManagers: [],
+        availableClients: [],
     }
     handleChange = e => {
         this.setState({[e.target.id]: e.target.value})
+    }
+    handleArrayChange = index => e => {
+        let array = this.state[e.target.id]
+        array[index] = e.target.value
+        this.setState({[e.target.id]: array})
     }
     cancelCreateProject = () => {
         // reset state
@@ -35,7 +44,64 @@ class CreateProject extends React.Component {
         // reset create project state
         this.props.handleState('createProject',false)
     }
+    increaseArray = (key) => {
+        let array = this.state[key]
+        array.push(0)
+        this.setState({[key]: array})
+    }
+    /* RETURN USER ************************************************************************************************************************************************/
+    returnUser = id => {
+        for(let user of this.props.users) {
+            if(user.id === id) {
+                return user
+            }
+        } 
+    }
+    /* REQUESTS ***************************************************************************************************************************************************/
+    getAvailableUsers = () => {
+        console.log('get available users')
+        let userTypes = ['programmers','managers','clients']
+        const cookies = new Cookies 
+        const key = cookies.get('key')
+        for(let userType of userTypes) {
+            fetch(`http://localhost:8000/api/v1/${userType}/`, {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Token ' + key
+                }
+            })
+            .then(res => {
+                if(!res.ok) {
+                    throw res 
+                } else {
+                    return res.json()
+                }
+            })
+            .then(resJson => {
+                let availableDesigners = []
+                let designers = resJson
+                switch(userType) {
+                    case 'programmers': {
+                        for(let designer of designers) {
+                            console.log('designers.user = ',designer.user)
+                            let user = this.returnUser(designer.user)
+                            designers.push(user)
+                        }
+                        this.setState({availableDesigners})
+                        break;
+                    }
+                    case 'managers': this.setState({availableManagers: resJson}); break;
+                    case 'clients': this.setState({availableClients: resJson}); break;
+                }
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        }
+    }
     render() {
+        console.log('available designers = ',this.state.availableDesigners)
         return (
             <div id='create-project'>
                 <div id='create-project-header'>
@@ -101,50 +167,65 @@ class CreateProject extends React.Component {
                         <Form.Group className='create-project-header-group' id='create-project-form-designers'> 
                             <div className='create-project-header-group-header'> 
                                 <Form.Label>Designer(s)</Form.Label>
-                                <Button size='sm' variant='success'>Add Designer</Button>
+                                <Button size='sm' variant='success' onClick={()=> this.increaseArray('designers')}>Add Designer</Button>
                             </div>
-                            <Form.Control
-                                as='select'
-                                id='designers'
-                                value={this.state.programmer}
-                                onChange={this.handleChange}
-                            >
-                                <option value=''>Select Designer</option>
-                                {/* map through an array of available programmers */}
-                            </Form.Control> 
+                            {this.state.designers.map((designer,index) => (
+                                <Form.Control
+                                    key={index}
+                                    as='select'
+                                    id='designers'
+                                    value={this.state.programmer}
+                                    onChange={this.handleArrayChange(index)}
+                                >
+                                    <option value=''>Select Designer</option>
+                                    {this.state.availableDesigners.map(designer => {
+
+                                        <option></option>
+                                    })}
+                                </Form.Control> 
+                            ))}
+
                         </Form.Group>
-
-
                         <Form.Group className='create-project-header-group' id='create-project-form-managers'>
                             <div className='create-project-header-group-header'>
                                 <Form.Label>Project Manager(s)</Form.Label>
-                                <Button size='sm' variant='success'>Add Manager</Button>
+                                <Button size='sm' variant='success' onClick={()=> this.increaseArray('managers')}>Add Manager</Button>
                             </div>
-                            <Form.Control
-                                as='select'
-                                id='managers'
-                                value={this.setState.manager}
-                                onChange={this.handleChange}
-                            >
-                                <option value=''>Select Project Manager</option>
-                                {/* map through managers */}
-                            </Form.Control>
+
+
+                            {this.state.managers.map((manager,index) => (
+                                <Form.Control
+                                    key={index}
+                                    as='select'
+                                    id='managers'
+                                    value={this.setState.manager}
+                                    onChange={this.handleArrayChange(index)}
+                                >
+                                    <option value=''>Select Project Manager</option>
+                                    <option value='test'>test</option>
+                                    {/* map through managers */}
+                                </Form.Control>
+                            ))}
                         </Form.Group>
 
                         <Form.Group className='create-project-header-group' id='create-project-form-clients'>
                             <div className='create-project-header-group-header'>
                                 <Form.Label>Client(s)</Form.Label>
-                                <Button size='sm' variant='success'>Add Client</Button>
+                                <Button size='sm' variant='success' onClick={()=> this.increaseArray('clients')}>Add Client</Button>
                             </div>
-                            <Form.Control 
-                                as='select'
-                                id='clients'
-                                value={this.setState.clients}
-                                onChange={this.handleChange}
-                            >
-                                <option value=''>Select Client</option>
-                                {/* map through clients */}
-                            </Form.Control>
+                            {this.state.clients.map((client,index) => (
+                                <Form.Control 
+                                    key={index}
+                                    as='select'
+                                    id='clients'
+                                    value={this.setState.clients}
+                                    onChange={this.handleArrayChange(index)}
+                                >
+                                    <option value=''>Select Client</option>
+                                    <option value='test'>test</option>
+                                    {/* map through clients */}
+                                </Form.Control>                               
+                            ))}
                         </Form.Group>
                     </Form>
                 </div>
@@ -166,6 +247,7 @@ class CreateProject extends React.Component {
     }
     componentDidMount() {
         this.props.setTitle('Create Project')
+        this.getAvailableUsers()
     }
 }
 export default CreateProject

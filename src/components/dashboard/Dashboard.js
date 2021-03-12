@@ -84,6 +84,8 @@ class Dashboard extends React.Component {
                     />
                     {this.state.createProject ?
                         <CreateProject
+                            // states
+                            users={this.props.users}
                             // functions
                             setTitle={this.props.setTitle}
                             handleState={this.handleState}
