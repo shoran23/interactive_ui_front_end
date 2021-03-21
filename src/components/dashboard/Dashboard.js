@@ -4,6 +4,7 @@ import DashboardProjectList from './DashboardProjectList'
 import DashboardProjectDetails from './DashboardProjectDetails'
 import DashboardFooter from './DashboardFooter'
 import CreateProject from '../create-project/CreateProject'
+import CreateProject2 from '../create-project2/CreateProject2'
 import './dashboard.css'
 import Cookies from 'universal-cookie'
 
@@ -83,7 +84,7 @@ class Dashboard extends React.Component {
                         handleSignout={this.props.handleSignout}
                     />
                     {this.state.createProject ?
-                        <CreateProject
+                        <CreateProject2
                             // states
                             users={this.props.users}
                             // functions

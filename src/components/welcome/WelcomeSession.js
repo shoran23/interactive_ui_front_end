@@ -4,7 +4,6 @@ import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
 import "bootstrap/dist/css/bootstrap.min.css"
 
-
 class WelcomeSignIn extends React.Component {
     render() {
         return (
@@ -119,9 +118,9 @@ class WelcomeRegister extends React.Component {
                         onChange={this.props.handleChange}
                     >
                         <option value=''>Select Role</option>
-                        <option value='clients'>Client</option>
-                        <option value='managers'>Manager</option>
-                        <option value='programmers'>Programmer</option>
+                        <option value='Client'>Client</option>
+                        <option value='Manager'>Manager</option>
+                        <option value='Programmer'>Programmer</option>
                     </Form.Control>
                     {this.props.role !== ''?
                         <Col className='welcome-register-popup'>

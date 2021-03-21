@@ -98,10 +98,9 @@ class Welcome extends React.Component {
                 }
             })
         })
-
     }
-    handleCreateUserRole = key => {
-        fetch('http://localhost:8000/api/v1/users/', {
+    handleCreateUserProfile = key => {
+        fetch('http://localhost:8000/api/v1/users', {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -119,7 +118,7 @@ class Welcome extends React.Component {
                     break;
                 }
             }
-            fetch(`http://localhost:8000/api/v1/${this.state.role}/`, {
+            fetch('http://localhost:8000/api/v1/user_profiles/', {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -127,9 +126,12 @@ class Welcome extends React.Component {
                 },
                 method: 'POST',
                 body: JSON.stringify ({
-                    user: id
+                    user: id,
+                    role: this.state.role,
+                    first_name: this.state.firstName,
+                    last_name: this.state.lastName,
                 })
-            }) 
+            })
             .then(res => {
                 if(res.ok) {
                     fetch(`http://localhost:8000/api/v1/users/${id}/`, {
@@ -146,11 +148,11 @@ class Welcome extends React.Component {
                     })
                     .then(res => {
                         if(res.ok) {
-                            this.props.handleState('login',true)
+                            this.continueLogin()
                         }
                     })
                 }
-            })           
+            }) 
         })
     }
     handleRegister = () => {
@@ -178,7 +180,7 @@ class Welcome extends React.Component {
             this.setState({errors: []})
             const cookies = new Cookies();
             cookies.set('key', resJson.key, { path: '/' });
-            this.handleCreateUserRole(resJson.key)
+            this.handleCreateUserProfile(resJson.key)
             this.props.handleState('login',true)
         })
         .catch(err => {

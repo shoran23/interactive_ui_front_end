@@ -1,0 +1,68 @@
+#create-project-slide-show {
+    width: 100%;
+    height: 1000px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+#create-project-slide-view {
+    width: 90%;
+    height: 20%;
+    background-color: rgba(0,0,0,0.75);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;   
+    overflow-x: scroll;
+}
+.create-project-slide {
+    width: 12%;
+    height: 90%;
+    background-color: white;
+    margin-left: 1%;
+}
+#create-project-create-new-slide-container {
+    width: 90%;
+    height: 5%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+#create-project-current-slide-options {
+    width: 90%;
+    height: 10%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#create-project-current-slide-options-divider {
+    width: 75%;
+    height: 4%;
+    background-color: #D0CCCC;
+}
+#create-project-current-slide-options-buttons {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2%;
+}
+.create-project-current-slide-option {
+    width: 10%;
+    margin-left: 1%;
+}
+
+#create-project-current-slide {
+    width: 100%;
+    height: 20%;
+    border: 1px solid black;
+    background-color: red;
+
+}
+
