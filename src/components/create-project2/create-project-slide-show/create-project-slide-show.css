@@ -16,11 +16,15 @@
     align-items: center;   
     overflow-x: scroll;
 }
-.create-project-slide {
+.create-project-slide-active, .create-project-slide-inactive {
     width: 12%;
     height: 90%;
     background-color: white;
     margin-left: 1%;
+}
+.create-project-slide-active {
+    border: 3px solid #99ccff;
+    border-radius: 2px;
 }
 #create-project-create-new-slide-container {
     width: 90%;
@@ -57,12 +61,28 @@
     width: 10%;
     margin-left: 1%;
 }
-
 #create-project-current-slide {
     width: 100%;
-    height: 20%;
+    height: 60%;
     border: 1px solid black;
-    background-color: red;
+    display: grid;
+    grid-template-columns: 5% 90% 5%;
+}
+.create-project-current-slide-col {
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#create-project-current-slide-form {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    background-color: #D0CCCC;
+
+}
+#create-project-current-slide-form-image {
 
 }
 
