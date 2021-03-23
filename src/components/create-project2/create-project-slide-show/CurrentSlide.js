@@ -18,10 +18,24 @@ class CurrentSlide extends React.Component {
             this.props.increaseInnerArray('slides',this.props.currentSlide,'notes','')
         }
     }
+    handleCurrentSlide = action => {
+        if(action === 'increase') {
+            if(this.props.currentSlide < this.props.slides.length - 1) {
+                this.props.handleChange('currentSlide',this.props.currentSlide + 1)
+            }
+        } else {
+            if(this.props.currentSlide > 0) {
+                this.props.handleChange('currentSlide',this.props.currentSlide - 1)
+            }
+        }
+    }
     render() {
+        console.log('current slide = ',this.props.currentSlide)
         return (
             <div id='create-project-current-slide'>
-                <div className='create-project-current-slide-col'>left</div>
+                <div className='create-project-current-slide-col'>
+                    <div id='create-project-current-slide-left-arrow' onClick={()=> this.handleCurrentSlide('decrease')}></div>     
+                </div>
                 <div className='create-project-current-slide-col'>
                     <Form id='create-project-current-slide-form'>
                         <Form.Group>
@@ -55,11 +69,12 @@ class CurrentSlide extends React.Component {
                                     </li>
                                 ))}
                             </ul>
-                            <Button onClick={()=> this.props.increaseInnerArray('slides',this.props.currentSlide,'notes','')}>+</Button>
                         </Form.Group>
                     </Form>
                 </div>
-                <div className='create-project-current-slide-col'>right</div>
+                <div className='create-project-current-slide-col'>
+                    <div id='create-project-current-slide-right-arrow' onClick={()=> this.handleCurrentSlide('increase')}></div> 
+                </div>
             </div>
         )
     }

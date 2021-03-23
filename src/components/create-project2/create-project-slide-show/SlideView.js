@@ -5,9 +5,23 @@ class Slide extends React.Component {
         return (
             <React.Fragment>
                 {this.props.index === this.props.currentSlide?
-                    <div className='create-project-slide-active' onClick={()=> this.props.handleChange('currentSlide',this.props.index)}>{this.props.slide.title}</div>
+                    <div className='create-project-slide-active' onClick={()=> this.props.handleChange('currentSlide',this.props.index)}>
+                        <h5>{this.props.slide.title}</h5>
+                        <ul>
+                            {this.props.slide.notes.map((note,index) => (
+                                <li key={index}>{note}</li>
+                            ))}
+                        </ul>
+                    </div>
                 :
-                    <div className='create-project-slide-inactive' onClick={()=> this.props.handleChange('currentSlide',this.props.index)}>{this.props.slide.title}</div>
+                    <div className='create-project-slide-inactive' onClick={()=> this.props.handleChange('currentSlide',this.props.index)}>
+                        <h5>{this.props.slide.title}</h5>
+                        <ul>
+                            {this.props.slide.notes.map((note,index) => (
+                                <li key={index}>{note}</li>
+                            ))}
+                        </ul>
+                    </div>
             }
             </React.Fragment>
         )

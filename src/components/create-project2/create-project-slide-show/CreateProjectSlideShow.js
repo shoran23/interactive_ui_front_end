@@ -57,6 +57,7 @@ class CreateProjectSlideShow extends React.Component {
                     slides={this.state.slides}
                     currentSlide={this.state.currentSlide}
                     // function
+                    handleChange={this.handleChange}
                     handleArrayChange={this.handleArrayChange}
                     handleInnerArrayChange={this.handleInnerArrayChange}
                     increaseInnerArray={this.increaseInnerArray}

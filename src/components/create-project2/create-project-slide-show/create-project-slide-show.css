@@ -14,6 +14,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;   
+    overflow-y: scroll;
     overflow-x: scroll;
 }
 .create-project-slide-active, .create-project-slide-inactive {
@@ -82,7 +83,18 @@
     background-color: #D0CCCC;
 
 }
-#create-project-current-slide-form-image {
-
+#create-project-current-slide-left-arrow {
+    width: 0;
+    height: 0;
+    border-top: 50px solid transparent;
+    border-bottom: 50px solid transparent;
+    border-right: 50px solid black;
+}
+#create-project-current-slide-right-arrow {
+    width: 0;
+    height: 0;
+    border-top: 50px solid transparent;
+    border-bottom: 50px solid transparent;
+    border-left: 50px solid black;
 }
 
