@@ -186,6 +186,7 @@ class CreateProject2 extends React.Component {
                     programmerList={this.state.programmerList}
                     managerList={this.state.managerList}
                     // functions
+                    handleState={this.props.handleState}
                     handleChange={this.handleChange}
                     handleArrayChange={this.handleArrayChange}
                     handleArrayRemove={this.handleArrayRemove}

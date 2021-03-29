@@ -13,6 +13,7 @@ class CreateProjectForm extends React.Component {
                 <Form className='create-project-form'>
                     <CreateProjectFormHeader
                         // functions
+                        handleState={this.props.handleState}
                         handlePostProject={this.props.handlePostProject}
                     />
                     <CreateProjectFormGroupInput

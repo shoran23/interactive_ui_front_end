@@ -92,7 +92,7 @@ class Dashboard extends React.Component {
                             handleState={this.handleState}
                         />
                     :
-                        <React.Fragment>
+                        <div id='dashboard-center'>
                             <DashboardProjectList
                                 // states
                                 projects={this.state.projects}
@@ -102,7 +102,7 @@ class Dashboard extends React.Component {
                                 getProgrammers={this.getProgrammers}
                                 handleState={this.handleState}
                             />
-                            {this.state.selectedProject !== null ?
+                            {this.state.projectIndex !== null ?
                                 <DashboardProjectDetails
                                     // states 
                                     project={this.state.projects[this.state.projectIndex]}
@@ -110,9 +110,9 @@ class Dashboard extends React.Component {
                                     users={this.props.users}
                                 />
                             :
-                                <div></div>
+                                <React.Fragment></React.Fragment>
                             }
-                        </React.Fragment>
+                        </div>
                     }
                     <DashboardFooter/>
                 </React.Fragment>
