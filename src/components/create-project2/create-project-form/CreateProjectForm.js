@@ -11,16 +11,19 @@ class CreateProjectForm extends React.Component {
         return (
             <div id='create-project-form-container'>
                 <Form className='create-project-form'>
-                    <CreateProjectFormHeader/>
+                    <CreateProjectFormHeader
+                        // functions
+                        handlePostProject={this.props.handlePostProject}
+                    />
                     <CreateProjectFormGroupInput
                         // states
                         controlId='create-project-form-customer'
                         label='Customer'
                         placeholder='Enter project customer'
                         inputId='customer'
-                        value={this.props.customer}
+                        inputValue={this.props.customer}
                         // functions
-                        onChange={this.props.handleChange}
+                        handleChange={this.props.handleChange}
                     />
                     <CreateProjectFormGroupInput
                         // states
@@ -28,19 +31,19 @@ class CreateProjectForm extends React.Component {
                         label='Project Name'
                         placeholder='Enter project name'
                         inputId='name'
-                        value={this.props.name}
+                        inputValue={this.props.name}
                         // functions
-                        onChange={this.props.handleChange}
+                        handleChange={this.props.handleChange}
                     />
                     <CreateProjectFormGroupInput
                         // states
                         controlId='create-project-form-project-number'
                         label='Project Number'
                         placeholder='Enter project number'
-                        inputId='number'
-                        value={this.props.projectNumber}
+                        inputId='projectNumber'
+                        inputValue={this.props.projectNumber}
                         // functions
-                        onChange={this.props.handleChange}
+                        handleChange={this.props.handleChange}
                     />
                     <CreateProjectFormGroupInput
                         // states
@@ -48,20 +51,20 @@ class CreateProjectForm extends React.Component {
                         label='Order Number'
                         placeholder='Enter order number'
                         inputId='orderNumber'
-                        value={this.props.orderNumber}
+                        inputValue={this.props.orderNumber}
                         // functions
-                        onChange={this.props.handleChange}
+                        handleChange={this.props.handleChange}
                     />
                     <CreateProjectFormGroupDropDown
                         // states
                         controlId='create-project-form-type'
                         label='Project Type'
-                        inputId='type'
-                        value={this.props.type}
+                        inputId='project_type'
+                        inputValue={this.props.project_type}
                         options={[
                             {label: 'Select Project Type', value: ''},
-                            {label: 'Interactive', value: 'interactive'},
-                            {label: 'Slide Show', value: 'slide-show'}
+                            {label: 'Interactive', value: 'Interactive'},
+                            {label: 'Slide Show', value: 'Slide Show'}
                         ]}
                         // functions
                         onChange={this.props.handleChange}

@@ -6,7 +6,7 @@ class CreateProjectFormHeader extends React.Component {
         return (
             <div className='create-project-form-header'>
                 <div id='create-project-form-header-options'>
-                    <Button className='create-project-form-header-button' variant='success' size='lg'>Confirm</Button>
+                    <Button className='create-project-form-header-button' variant='success' size='lg' onClick={this.props.handlePostProject}>Confirm</Button>
                     <Button className='create-project-form-header-button' variant='danger' size='lg'>Cancel</Button>
                 </div>
                 <div id='create-project-form-header-divider'></div>

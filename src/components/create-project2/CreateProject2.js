@@ -8,20 +8,35 @@ import CreateProjectDemo from './create-project-demo/CreateProjectDemo'
 class CreateProject2 extends React.Component {
     state = {
         customer: '',
-        name: '',
+        name: 'test',
         projectNumber: null,
         orderNumber: null,
-        type: '',
         clients: [],
         programmers: [{}],
         managers: [],
+        status: 'Ready for Review',
+        project_type: '',
+        panels: ['1'],
         clientList: [],
         programmerList: [],
         managerList: [],
+        slideShow: {
+            slides: [{
+                title: '',
+                image: null,
+                notes: [''],
+                comments: [],
+                questions: [],
+            }]
+        },
+        currentSlide: 0,
     }
     /* MANAGE STATES ******************************************************************************************/ 
     handleChange = e => {
         this.setState({[e.target.id]: e.target.value})
+    }
+    handleChangeDirect = (key,value) => {
+        this.setState({[key]: value})
     }
     handleArrayChange = index => e => {
         let array = this.state[e.target.id]
@@ -37,6 +52,42 @@ class CreateProject2 extends React.Component {
         let array = this.state[key]
         array.push(0)
         this.setState({[key]: array})
+    }
+    /* MANAGE SLIDE SHOW ***************************************************************************************/
+    handleSlideShowChange = e => {
+        let slideShow = this.state.slideShow
+        slideShow[e.target.id] = e.target.value
+        this.setState({slideShow})
+    }
+    handleSlideShowSlideChange = index => e => {
+        let slideShow = this.state.slideShow
+        slideShow.slides[index][e.target.id] = e.target.value
+        this.setState({slideShow})
+    }
+    handelSlideShowSlideChangeDirect = (index,key,value) => {
+        let slideShow = this.state.slideShow
+        slideShow.slides[index][key] = value
+        this.setState({slideShow})
+    }
+    handleSlideShowSlideInnerChange = (index,key,innerIndex,value) => {
+        let slideShow = this.state.slideShow
+        slideShow.slides[index][key][innerIndex] = value
+        this.setState({slideShow})
+    }
+    handleSlideShowSlideRemove = index => e => {
+        let slideShow = this.state.slideShow
+        slideShow.slides.splice(index,1)
+        this.setState({slideShow})
+    }
+    handleSlideShowSlideIncrease = () => {
+        let slideShow = this.state.slideShow
+        slideShow.slides.push({title: '', notes: [''], image: null, comments: [''], questions: ['']})
+        this.setState({slideShow})
+    }
+    handleSlideShowSlideNoteIncrease = index => {
+        let slideShow = this.state.slideShow
+        slideShow.slides[index].notes.push('')
+        this.setState({slideShow})
     }
     /* MANAGE REQUESTS *****************************************************************************************/
     handleGetUserLists = () => {
@@ -71,6 +122,53 @@ class CreateProject2 extends React.Component {
             console.log(err)
         })
     }
+    handlePostProject = () => {
+        const cookies = new Cookies()
+        let key = cookies.get('key')
+        fetch('http://localhost:8000/api/v1/projects/', {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Token ' + key
+            },
+            method: 'POST',
+            body: JSON.stringify({
+                name: this.state.name,
+                order_number: this.state.orderNumber,
+                programmers: this.state.programmers,
+                managers: this.state.managers,
+                clients: this.state.clients,
+                project_type: this.state.project_type,
+                panels: this.state.panels,
+                status: this.state.status,
+            })    
+        })
+        .then(res => res.json())
+        .then(resJson => {
+            if(this.state.project_type === 'Slide Show') {
+                this.handlePostSlideShow(key,resJson.id)
+            }
+        })
+        .catch(err => {
+            console.log('err = ',err)
+        })
+    }
+    handlePostSlideShow = (key,projectId) => {
+        fetch('http://localhost:8000/api/v1/slide_shows/', {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Token ' + key
+            },
+            method: 'POST',
+            body: JSON.stringify({
+                project: projectId,
+                slideShow: this.state.slideShow
+            })
+        })
+        .then(res => res.json())
+        .then(resJson => console.log(resJson))
+    }
     render() {
         return (
             <div id='create-project'>
@@ -92,11 +190,26 @@ class CreateProject2 extends React.Component {
                     handleArrayChange={this.handleArrayChange}
                     handleArrayRemove={this.handleArrayRemove}
                     increaseArray={this.increaseArray}
+                    handlePostProject={this.handlePostProject}
                 />
-                {this.state.type != '' ?
+                {this.state.project_type != '' ?
                     <div id='create-project-area'>
-                        {this.state.type === 'slide-show' ?
-                            <CreateProjectSlideShow/>
+                        {this.state.project_type === 'Slide Show' ?
+                            <CreateProjectSlideShow
+                                // states
+                                slideShow={this.state.slideShow}
+                                currentSlide={this.state.currentSlide}
+                                // functions
+                                handleChange={this.handleChange}
+                                handleChangeDirect={this.handleChangeDirect}
+                                handleSlideShowChange={this.handleSlideShowChange}
+                                handelSlideShowSlideChangeDirect={this.handelSlideShowSlideChangeDirect}
+                                handleSlideShowSlideInnerChange={this.handleSlideShowSlideInnerChange}
+                                handleSlideShowSlideChange={this.handleSlideShowSlideChange}
+                                handleSlideShowSlideRemove={this.handleSlideShowSlideRemove}
+                                handleSlideShowSlideIncrease={this.handleSlideShowSlideIncrease}
+                                handleSlideShowSlideNoteIncrease={this.handleSlideShowSlideNoteIncrease}
+                            />
                         :
                             <CreateProjectDemo/>
                         }
