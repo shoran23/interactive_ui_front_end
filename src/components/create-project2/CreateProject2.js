@@ -1,9 +1,11 @@
 import React from 'react'
-import Cookies from 'universal-cookie'
-import CreateProjectForm from './create-project-form/CreateProjectForm'
 import './create-project2.css'
+import CreateProjectForm from './create-project-form/CreateProjectForm'
+import CreateProjectPanels from './create-project-panels/CreateProjectPanels'
 import CreateProjectSlideShow from './create-project-slide-show/CreateProjectSlideShow'
 import CreateProjectDemo from './create-project-demo/CreateProjectDemo'
+import {apiPost} from './../../api/apiPost'
+import {apiGet} from './../../api/apiGet'
 
 class CreateProject2 extends React.Component {
     state = {
@@ -11,12 +13,12 @@ class CreateProject2 extends React.Component {
         name: 'test',
         projectNumber: null,
         orderNumber: null,
-        clients: [],
+        clients: [{}],
         programmers: [{}],
-        managers: [],
+        managers: [{}],
         status: 'Ready for Review',
         project_type: '',
-        panels: ['1'],
+        panels: [],
         clientList: [],
         programmerList: [],
         managerList: [],
@@ -30,6 +32,7 @@ class CreateProject2 extends React.Component {
             }]
         },
         currentSlide: 0,
+        availablePanels: []
     }
     /* MANAGE STATES ******************************************************************************************/ 
     handleChange = e => {
@@ -94,16 +97,7 @@ class CreateProject2 extends React.Component {
         let clientList = []
         let programmerList = []
         let managerList = []
-        const cookies = new Cookies()
-        let key = cookies.get('key')
-        fetch('http://localhost:8000/api/v1/user_profiles/', {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Token ' + key
-            }
-        })
-        .then(res => res.json())
+        apiGet('http://localhost:','8000','/api/v1/user_profiles')
         .then(resJson => {
             console.log(resJson)
             let userProfiles = resJson
@@ -121,38 +115,34 @@ class CreateProject2 extends React.Component {
         .catch(err => {
             console.log(err)
         })
+        .then(users => console.log('users = ',users))
+    }
+    handleGetPanels = () => {
+        apiGet('http://localhost:','8000','/api/v1/panels/')
+        .then(resJson => this.setState({availablePanels: resJson}))
     }
     handlePostProject = () => {
-        const cookies = new Cookies()
-        let key = cookies.get('key')
-        fetch('http://localhost:8000/api/v1/projects/', {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Token ' + key
-            },
-            method: 'POST',
-            body: JSON.stringify({
-                name: this.state.name,
-                order_number: this.state.orderNumber,
-                programmers: this.state.programmers,
-                managers: this.state.managers,
-                clients: this.state.clients,
-                project_type: this.state.project_type,
-                panels: this.state.panels,
-                status: this.state.status,
-            })    
-        })
-        .then(res => res.json())
-        .then(resJson => {
-            if(this.state.project_type === 'Slide Show') {
-                this.handlePostSlideShow(key,resJson.id)
-            }
-        })
+        let body = {
+            name: this.state.name,
+            order_number: this.state.orderNumber,
+            managers: this.state.managers,
+            clients: this.state.clients,
+            project_type: this.state.project_type,
+            panels: this.state.panels,
+            status: this.state.status,
+        }
+        apiPost('http://localhost:','8000','/api/v1/projects/',body)
+        .then(res => console.log(res))
+        // .then(resJson => {
+        //     if(this.state.project_type === 'Slide Show') {
+        //         this.handlePostSlideShow(key,resJson.id)
+        //     }
+        // })
         .catch(err => {
             console.log('err = ',err)
         })
     }
+
     handlePostSlideShow = (key,projectId) => {
         fetch('http://localhost:8000/api/v1/slide_shows/', {
             headers: {
@@ -192,6 +182,12 @@ class CreateProject2 extends React.Component {
                     handleArrayRemove={this.handleArrayRemove}
                     increaseArray={this.increaseArray}
                     handlePostProject={this.handlePostProject}
+                />
+                <CreateProjectPanels
+                    // states
+                    availablePanels={this.state.availablePanels}
+                    // functions
+                    handleGetPanels={this.handleGetPanels}
                 />
                 {this.state.project_type != '' ?
                     <div id='create-project-area'>
